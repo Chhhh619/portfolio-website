@@ -1,0 +1,34 @@
+.cursor-glow-effect {
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle,
+            rgba(99, 102, 241, 0.15) 0%,
+            rgba(139, 92, 246, 0.08) 30%,
+            transparent 70%);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.cursor-glow-effect.visible {
+    opacity: 1;
+}
+
+/* Add a secondary smaller glow for more depth */
+.cursor-glow-effect::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle,
+            rgba(99, 102, 241, 0.25) 0%,
+            transparent 70%);
+    transform: translate(-50%, -50%);
+}
