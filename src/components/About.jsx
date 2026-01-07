@@ -7,7 +7,7 @@ function About() {
         'Backend & DB': ['Node.js', 'PHP', 'SQL'],
         'AI & ML': ['Whisper ASR', 'PyTorch', 'HuggingFace', 'LoRA Fine-tuning'],
         'Mobile': ['Flutter', 'Android (Kotlin)'],
-        'Tools': ['Git', 'VS Code', 'Figma'],
+        'Tools': ['Git', 'VS Code', 'Figma', 'AWS', 'n8n', 'HuggingFace'],
     }
 
     return (

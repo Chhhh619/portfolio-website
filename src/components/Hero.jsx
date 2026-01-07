@@ -18,11 +18,7 @@ function Hero() {
                     <h2 className="hero-title gradient-text">
                         Software Engineer
                     </h2>
-                    <p className="hero-description">
-                        A passionate and results-oriented software engineer with proficient problem-solving
-                        skills, diverse skillset spanning AI/ML, web development, and mobile applications.
-                        Currently specializing in ASR model training and React development.
-                    </p>
+
                     <div className="hero-cta">
                         <a href="#asr-demo" className="btn btn-primary">
                             <span>Try My ASR Model</span>

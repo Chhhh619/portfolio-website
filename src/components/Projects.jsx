@@ -4,7 +4,7 @@ function Projects() {
     const projects = [
         {
             title: 'Hong Kong Cantonese ASR Model',
-            description: 'Fine-tuned Whisper Large V3 model for Hong Kong Cantonese speech recognition using LoRA. Trained on custom datasets with optimized hyperparameters for accurate transcription.',
+            description: 'Fine-tuned Whisper Large V3 model for Hong Kong Cantonese speech recognition using LoRA. Trained on custom datasets with optimized hyperparameters for accurate code switching transcription.',
             tags: ['Whisper', 'PyTorch', 'HuggingFace', 'LoRA', 'ASR'],
             featured: true,
             link: 'https://huggingface.co/Chhhh619/whisper-large-v3-hongkongtuned',
@@ -12,8 +12,8 @@ function Projects() {
             image: '/images/ASR.png',
         },
         {
-            title: 'BiL Coffee Website',
-            description: 'A modern, responsive website for BiL Coffee cafe featuring an elegant design, menu display, and seamless user experience built with web technologies.',
+            title: 'Brew is Life Coffee Website',
+            description: 'A modern, responsive website for Brew is Life cafe featuring an elegant design, menu display, and seamless user experience built with web technologies.',
             tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
             featured: false,
             image: '/images/bil.png',
@@ -51,7 +51,7 @@ function Projects() {
                             key={index}
                             className={`project-card glass-card ${project.featured ? 'featured' : ''}`}
                         >
-                            {project.featured && <span className="featured-badge">⭐ Featured</span>}
+                            {project.featured && <span className="featured-badge">⭐ Latest</span>}
 
                             <div className="project-image">
                                 {project.image ? (
