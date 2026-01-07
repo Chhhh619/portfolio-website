@@ -17,7 +17,7 @@ function Projects() {
             tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
             featured: false,
             image: '/images/bil.png',
-            link: '#', // Will be updated after deployment
+            link: 'https://bil-coffee-website.vercel.app',
             linkText: 'View Live Demo',
         },
         {
@@ -26,7 +26,7 @@ function Projects() {
             tags: ['React', 'E-Commerce', 'Web App', 'UI/UX'],
             featured: false,
             image: '/images/iphone.png',
-            link: '#', // Will be updated after deployment
+            link: 'https://ecommerce-website-chhhh-dgcpcegdgafsf6d7.southeastasia-01.azurewebsites.net/',
             linkText: 'View Live Demo',
         },
         {
