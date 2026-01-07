@@ -9,24 +9,32 @@ function Projects() {
             featured: true,
             link: 'https://huggingface.co/Chhhh619/whisper-large-v3-hongkongtuned',
             linkText: 'View on HuggingFace',
+            image: null, // No image for this one
         },
         {
-            title: 'Automated Workflow Management System',
-            description: 'Enterprise workflow automation solution built during internship at Dataverse. Streamlined business processes and improved operational efficiency.',
-            tags: ['React', 'Node.js', 'Automation', 'Enterprise'],
+            title: 'BiL Coffee Website',
+            description: 'A modern, responsive website for BiL Coffee cafe featuring an elegant design, menu display, and seamless user experience built with web technologies.',
+            tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
             featured: false,
+            image: '/images/bil.png',
+            link: '#', // Will be updated after deployment
+            linkText: 'View Live Demo',
         },
         {
-            title: 'AI Product Development (R&D)',
-            description: 'Part of the R&D team developing innovative AI products. Involved in research, prototyping, and implementation of cutting-edge AI solutions.',
-            tags: ['AI', 'Machine Learning', 'Research', 'Python'],
+            title: 'Digital Products E-Commerce',
+            description: 'Full-featured e-commerce platform for digital products with shopping cart, product catalog, and modern UI/UX design.',
+            tags: ['React', 'E-Commerce', 'Web App', 'UI/UX'],
             featured: false,
+            image: '/images/iphone.png',
+            link: '#', // Will be updated after deployment
+            linkText: 'View Live Demo',
         },
         {
             title: 'Mobile Application Development',
             description: 'Cross-platform mobile applications built with Flutter and Dart, featuring modern UI/UX design and seamless user experience.',
             tags: ['Flutter', 'Dart', 'Mobile', 'UI/UX'],
             featured: false,
+            image: '/images/fyp mobile1.png',
         },
     ]
 
@@ -46,13 +54,21 @@ function Projects() {
                             {project.featured && <span className="featured-badge">⭐ Featured</span>}
 
                             <div className="project-image">
-                                <div className="project-image-placeholder">
-                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                        <polyline points="21 15 16 10 5 21" />
-                                    </svg>
-                                </div>
+                                {project.image ? (
+                                    <img
+                                        src={project.image}
+                                        alt={project.title}
+                                        className="project-img"
+                                    />
+                                ) : (
+                                    <div className="project-image-placeholder">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+                                            <circle cx="8.5" cy="8.5" r="1.5" />
+                                            <polyline points="21 15 16 10 5 21" />
+                                        </svg>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="project-content">
