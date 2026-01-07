@@ -8,7 +8,7 @@ function Footer() {
             <div className="container">
                 <div className="footer-content">
                     <div className="footer-brand">
-                        <span className="footer-logo gradient-text">CH</span>
+                        <span className="footer-logo gradient-text">Tan Cheng Hong</span>
                         <p>Building innovative solutions with code.</p>
                     </div>
 
