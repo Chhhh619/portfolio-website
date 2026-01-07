@@ -9,7 +9,7 @@ function Projects() {
             featured: true,
             link: 'https://huggingface.co/Chhhh619/whisper-large-v3-hongkongtuned',
             linkText: 'View on HuggingFace',
-            image: null, // No image for this one
+            image: '/images/ASR.png',
         },
         {
             title: 'BiL Coffee Website',
