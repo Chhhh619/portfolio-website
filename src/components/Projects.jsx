@@ -34,7 +34,7 @@ function Projects() {
             description: 'Cross-platform mobile applications built with Flutter and Dart, featuring modern UI/UX design and seamless user experience.',
             tags: ['Flutter', 'Dart', 'Mobile', 'UI/UX'],
             featured: false,
-            image: '/images/fyp mobile1.png',
+            image: '/images/fyp.png',
         },
     ]
 
