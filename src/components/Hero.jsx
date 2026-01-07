@@ -38,13 +38,11 @@ function Hero() {
 
                 <div className="hero-image">
                     <div className="hero-image-wrapper">
-                        <div className="hero-image-placeholder">
-                            <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                            </svg>
-                            <span>Your Photo</span>
-                        </div>
+                        <img
+                            src="/images/profile.png"
+                            alt="Tan Cheng Hong"
+                            className="hero-profile-img"
+                        />
                     </div>
                 </div>
             </div>
