@@ -18,6 +18,7 @@ function Hero() {
                     <h2 className="hero-title gradient-text">
                         Software Engineer
                     </h2>
+                    <p className="hero-availability">📅 Available starting May 2026</p>
 
                     <div className="hero-cta">
                         <a href="#asr-demo" className="btn btn-primary">
