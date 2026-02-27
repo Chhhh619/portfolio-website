@@ -170,6 +170,7 @@ function ASRDemo() {
         setAudioFile(null)
         setTranscription('')
         setError('')
+        setIsProcessing(false)
         if (fileInputRef.current) {
             fileInputRef.current.value = ''
         }
@@ -178,9 +179,9 @@ function ASRDemo() {
     return (
         <section className="asr-demo section" id="asr-demo" ref={sectionRef}>
             <div className="container">
-                <h2 className="section-title">
-                    Try My <span className="gradient-text">ASR Model</span>
-                </h2>
+                <div className="section-header">
+                    <span className="section-title">ASR Demo</span>
+                </div>
                 <p className="section-subtitle">
                     Experience my fine-tuned Whisper Large V3 model for Hong Kong Cantonese speech recognition.
                     Upload an audio file or record directly from your browser.

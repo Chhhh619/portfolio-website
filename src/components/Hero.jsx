@@ -3,52 +3,27 @@ import './Hero.css'
 function Hero() {
     return (
         <section className="hero" id="hero">
-            <div className="hero-background">
-                <div className="grid-background"></div>
-                <div className="hero-gradient-orb orb-1"></div>
-                <div className="hero-gradient-orb orb-2"></div>
-            </div>
-
             <div className="container hero-content">
                 <div className="hero-text">
-                    <p className="hero-greeting">Hi, I'm</p>
+                    <div className="hero-availability">
+                        <span className="availability-dot"></span>
+                        Available May 2026
+                    </div>
                     <h1 className="hero-name">
-                        Tan Cheng Hong
+                        <span className="hero-greeting">Hi, I'm</span><br />
+                        Tan Cheng Hong.
                     </h1>
-                    <h2 className="hero-title gradient-text">
-                        Software Engineer
-                    </h2>
-                    <p className="hero-availability">Available starting May 2026</p>
-
-                    <div className="hero-cta">
-                        <a href="#asr-demo" className="btn btn-primary">
-                            <span>Try My ASR Model</span>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                <path d="M5 12h14M12 5l7 7-7 7" />
-                            </svg>
-                        </a>
-                        <a href="#contact" className="btn btn-secondary">
-                            Get in Touch
-                        </a>
-                    </div>
-                </div>
-
-                <div className="hero-image">
-                    <div className="hero-image-wrapper">
-                        <img
-                            src="/images/profile.png"
-                            alt="Tan Cheng Hong"
-                            className="hero-profile-img"
-                        />
-                    </div>
+                    <p className="hero-tagline">
+                        A software engineer passionately building innovative digital
+                        experiences — from AI-powered speech recognition to modern web platforms.
+                    </p>
                 </div>
             </div>
 
             <div className="hero-scroll-indicator">
-                <div className="scroll-mouse">
-                    <div className="scroll-wheel"></div>
-                </div>
-                <span>Scroll to explore</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                    <path d="M12 5v14M19 12l-7 7-7-7" />
+                </svg>
             </div>
         </section>
     )

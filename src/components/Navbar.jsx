@@ -14,17 +14,16 @@ function Navbar() {
     }, [])
 
     const navLinks = [
-        { label: 'About', href: '#about' },
-        { label: 'Projects', href: '#projects' },
+        { label: 'Work', href: '#work' },
+        { label: 'Experience', href: '#experience' },
         { label: 'ASR Demo', href: '#asr-demo' },
-        { label: 'Contact', href: '#contact' },
     ]
 
     return (
         <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
             <div className="navbar-container">
                 <a href="#" className="navbar-logo">
-                    <span className="logo-text">Portfolio</span>
+                    T.C.H.
                 </a>
 
                 <div className={`navbar-links ${menuOpen ? 'active' : ''}`}>

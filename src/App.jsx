@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
-import About from './components/About'
 import Projects from './components/Projects'
+import Experience from './components/Experience'
 import ASRDemo from './components/ASRDemo'
-import Contact from './components/Contact'
 import Footer from './components/Footer'
-import CursorGlow from './components/CursorGlow'
 
 function App() {
     const [isLoaded, setIsLoaded] = useState(false)
@@ -17,14 +15,12 @@ function App() {
 
     return (
         <div className={`app ${isLoaded ? 'loaded' : ''}`}>
-            <CursorGlow />
             <Navbar />
             <main>
                 <Hero />
-                <About />
                 <Projects />
+                <Experience />
                 <ASRDemo />
-                <Contact />
             </main>
             <Footer />
         </div>

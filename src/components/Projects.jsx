@@ -1,102 +1,154 @@
+import { useState, useEffect, useRef } from 'react'
 import './Projects.css'
 
 function Projects() {
+    const [activeIndex, setActiveIndex] = useState(0)
+    const sectionRef = useRef(null)
+
     const projects = [
         {
-            title: 'Hong Kong Cantonese ASR Model',
-            description: 'Fine-tuned Whisper Large V3 model for Hong Kong Cantonese speech recognition using LoRA. Trained on custom datasets with optimized hyperparameters for accurate code switching transcription.',
-            tags: ['Whisper', 'PyTorch', 'HuggingFace', 'LoRA', 'ASR'],
-            featured: true,
-            link: 'https://huggingface.co/Chhhh619/whisper-large-v3-hongkongtuned',
-            linkText: 'View on HuggingFace',
+            title: 'HK Cantonese ASR',
+            subtitle: 'AI / Speech Recognition',
+            description: 'Fine-tuned Whisper Large V3 for Hong Kong Cantonese speech recognition using LoRA, with optimized hyperparameters for accurate code-switching transcription.',
+            tags: ['Whisper', 'PyTorch', 'HuggingFace', 'LoRA'],
             image: '/images/ASR.png',
+            link: 'https://huggingface.co/Chhhh619/whisper-large-v3-hongkongtuned',
+            bgText: 'ASR MODEL',
         },
         {
-            title: 'CariSEO - AI-Powered SEO Platform',
-            description: 'Corporate AI SEO platform that leverages artificial intelligence to optimize search engine rankings, automate content analysis, and provide intelligent SEO recommendations for businesses.',
-            tags: ['AI', 'SEO', 'Corporate', 'Web Platform'],
-            featured: false,
+            title: 'CariSEO Landing Page',
+            subtitle: 'AI-Powered SEO Platform',
+            description: 'Corporate AI SEO platform that leverages artificial intelligence to optimize search engine rankings and provide intelligent recommendations.',
+            tags: ['AI', 'SEO', 'Web Platform'],
             image: '/images/solutions.png',
             link: 'https://www.cariseo.com/',
-            linkText: 'Visit Website',
+            bgText: 'CARISEO',
         },
         {
-            title: 'Brew is Life Coffee Website',
-            description: 'A modern, responsive website for Brew is Life cafe featuring an elegant design, menu display, and seamless user experience built with web technologies.',
-            tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
-            featured: false,
+            title: 'Minimalist Mock Up Website',
+            subtitle: 'Web Design / Development',
+            description: 'Modern, responsive cafe website featuring elegant design, menu display, and seamless user experience.',
+            tags: ['HTML', 'CSS', 'JavaScript'],
             image: '/images/bil.png',
             link: 'https://bil-coffee-website.vercel.app',
-            linkText: 'View Live Demo',
+            bgText: 'BREW IS LIFE',
         },
-
         {
-            title: 'Mobile Application Development',
-            description: 'Cross-platform mobile applications built with Flutter and Dart, featuring modern UI/UX design and seamless user experience.',
-            tags: ['Flutter', 'Dart', 'Mobile', 'UI/UX'],
-            featured: false,
+            title: 'Self-Budgeting Mobile App',
+            subtitle: 'Cross-Platform Development',
+            description: 'Cross-platform mobile applications with modern UI/UX design and seamless user experience.',
+            tags: ['Flutter', 'Dart', 'Mobile'],
             image: '/images/fyp.png',
+            link: null,
+            bgText: 'MOBILE APP',
         },
     ]
 
+    useEffect(() => {
+        const handleScroll = () => {
+            if (!sectionRef.current) return
+
+            const section = sectionRef.current
+            const rect = section.getBoundingClientRect()
+            const sectionTop = -rect.top
+            const totalScrollable = section.offsetHeight - window.innerHeight
+
+            if (sectionTop < 0 || totalScrollable <= 0) {
+                setActiveIndex(0)
+                return
+            }
+
+            const progress = Math.min(sectionTop / totalScrollable, 1)
+            const newIndex = Math.min(
+                Math.floor(progress * projects.length),
+                projects.length - 1
+            )
+            setActiveIndex(newIndex)
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true })
+        return () => window.removeEventListener('scroll', handleScroll)
+    }, [projects.length])
+
     return (
-        <section className="projects section" id="projects">
-            <div className="container">
-                <h2 className="section-title">
-                    Featured <span className="gradient-text">Projects</span>
-                </h2>
+        <section className="projects-section" id="work" ref={sectionRef}>
+            <div className="projects-sticky">
+                <div className="container">
+                    <div className="section-header">
+                        <span className="section-title">Past Projects</span>
+                        <span className="section-count">({projects.length})</span>
+                    </div>
+                </div>
 
-                <div className="projects-grid">
+                {/* Background running text */}
+                <div className="project-bg-text-wrapper">
                     {projects.map((project, index) => (
-                        <article
+                        <div
                             key={index}
-                            className={`project-card glass-card ${project.featured ? 'featured' : ''}`}
+                            className={`project-bg-text ${activeIndex === index ? 'active' : ''}`}
                         >
-                            {project.featured && <span className="featured-badge">⭐ Latest</span>}
+                            <span>{project.bgText}</span>
+                            <span>{project.bgText}</span>
+                            <span>{project.bgText}</span>
+                        </div>
+                    ))}
+                </div>
 
-                            <div className="project-image">
-                                {project.image ? (
-                                    <img
-                                        src={project.image}
-                                        alt={project.title}
-                                        className="project-img"
-                                    />
-                                ) : (
-                                    <div className="project-image-placeholder">
-                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
-                                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-                                            <circle cx="8.5" cy="8.5" r="1.5" />
-                                            <polyline points="21 15 16 10 5 21" />
-                                        </svg>
+                {/* Card stack */}
+                <div className="project-card-stack">
+                    {projects.map((project, index) => {
+                        const isActive = index === activeIndex
+                        const isPast = index < activeIndex
+                        const isFuture = index > activeIndex
+
+                        const CardWrapper = project.link ? 'a' : 'div'
+                        const cardProps = project.link
+                            ? { href: project.link, target: '_blank', rel: 'noopener noreferrer' }
+                            : {}
+
+                        return (
+                            <CardWrapper
+                                key={index}
+                                {...cardProps}
+                                className={`project-card ${isActive ? 'active' : ''} ${isPast ? 'past' : ''} ${isFuture ? 'future' : ''} ${project.link ? 'has-link' : ''}`}
+                            >
+                                {/* Front — image in container */}
+                                <div className="project-card-face project-card-front">
+                                    {project.link && (
+                                        <div className="project-link-arrow">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                                <path d="M7 17L17 7M17 7H7M17 7V17" />
+                                            </svg>
+                                        </div>
+                                    )}
+                                    <div className="project-image-wrapper">
+                                        <img
+                                            src={project.image}
+                                            alt={project.title}
+                                            loading="lazy"
+                                        />
                                     </div>
-                                )}
-                            </div>
-
-                            <div className="project-content">
-                                <h3>{project.title}</h3>
-                                <p>{project.description}</p>
-
-                                <div className="project-tags">
-                                    {project.tags.map((tag) => (
-                                        <span key={tag} className="skill-tag">{tag}</span>
-                                    ))}
+                                    <div className="project-info-bar">
+                                        <h3>{project.title}</h3>
+                                        <div className="project-tags">
+                                            {project.tags.map((tag) => (
+                                                <span key={tag} className="tag">{tag}</span>
+                                            ))}
+                                        </div>
+                                    </div>
                                 </div>
+                            </CardWrapper>
+                        )
+                    })}
+                </div>
 
-                                {project.link && (
-                                    <a
-                                        href={project.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="project-link"
-                                    >
-                                        {project.linkText}
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                                            <path d="M7 17L17 7M17 7H7M17 7V17" />
-                                        </svg>
-                                    </a>
-                                )}
-                            </div>
-                        </article>
+                {/* Progress dots */}
+                <div className="project-dots">
+                    {projects.map((_, index) => (
+                        <div
+                            key={index}
+                            className={`project-dot ${activeIndex === index ? 'active' : ''}`}
+                        />
                     ))}
                 </div>
             </div>

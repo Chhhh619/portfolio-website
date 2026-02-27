@@ -1,79 +1,171 @@
 .footer {
-    background: var(--bg-primary);
-    border-top: 1px solid var(--border-subtle);
-    padding: 60px 0 30px;
+    padding: 100px 0 40px;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
 }
 
-.footer-content {
+.footer-top {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 40px;
+    gap: 60px;
+    margin-bottom: 80px;
 }
 
-.footer-brand {
+.footer-cta-text {
+    font-size: clamp(1.2rem, 2.5vw, 1.6rem);
+    font-weight: 500;
+    color: var(--text);
+    max-width: 380px;
+    line-height: 1.4;
+}
+
+.footer-columns {
+    display: flex;
+    gap: 60px;
+}
+
+.footer-col {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
-.footer-logo {
-    font-size: 2rem;
-    font-weight: 800;
-}
-
-.footer-brand p {
-    max-width: 250px;
-}
-
-.footer-links {
-    display: flex;
-    gap: 32px;
-}
-
-.footer-links a {
-    color: var(--text-secondary);
+.footer-col h4 {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
     font-weight: 500;
+}
+
+.footer-col a,
+.footer-location {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
     transition: color var(--transition-fast);
 }
 
-.footer-links a:hover {
-    color: var(--text-primary);
+.footer-col a:hover {
+    color: var(--text);
 }
 
+/* Back to top */
+.footer-back-top {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 40px;
+}
+
+.back-to-top-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-family: var(--font);
+    font-size: 0.8rem;
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.back-to-top-btn:hover {
+    color: var(--text);
+    border-color: var(--border-hover);
+}
+
+/* Giant wordmark — full width container with padding */
+.footer-wordmark {
+    margin-bottom: 40px;
+    width: 100%;
+    padding: 0 24px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.footer-wordmark span {
+    display: block;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--text);
+    opacity: 0.12;
+    user-select: none;
+    transition: opacity var(--transition-base);
+    text-align: center;
+    white-space: nowrap;
+    /* Cap at 7rem so text fits within 1200px container */
+    font-size: clamp(3rem, 7.5vw, 7rem);
+    letter-spacing: -0.03em;
+}
+
+.footer:hover .footer-wordmark span {
+    opacity: 0.22;
+}
+
+/* Bottom bar */
 .footer-bottom {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding-top: 24px;
-    border-top: 1px solid var(--border-subtle);
+    border-top: 1px solid var(--border);
 }
 
 .footer-bottom p {
-    font-size: 0.9rem;
-}
-
-.footer-credit {
+    font-size: 0.75rem;
     color: var(--text-tertiary);
 }
 
+.footer-credit {
+    font-size: 0.75rem;
+    color: var(--text-tertiary);
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .footer-content {
-        flex-direction: column;
-        gap: 32px;
-        align-items: center;
-        text-align: center;
+    .footer {
+        padding: 60px 0 32px;
     }
 
-    .footer-links {
+    .footer-top {
+        flex-direction: column;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+
+    .footer-columns {
         flex-wrap: wrap;
-        justify-content: center;
-        gap: 20px;
+        gap: 32px;
+    }
+
+    .footer-wordmark {
+        padding: 0 16px;
+    }
+
+    .footer-wordmark span {
+        font-size: clamp(2rem, 7vw, 5rem);
     }
 
     .footer-bottom {
         flex-direction: column;
-        gap: 12px;
+        gap: 8px;
         text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-wordmark {
+        padding: 0 12px;
+    }
+
+    .footer-wordmark span {
+        font-size: clamp(1.5rem, 6.5vw, 3.5rem);
+    }
+
+    .footer-columns {
+        gap: 24px;
     }
 }
