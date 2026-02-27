@@ -135,15 +135,15 @@ function ASRDemo() {
 
         try {
             // Import Gradio client dynamically
-            const { Client } = await import('@gradio/client')
+            const { Client, handle_file } = await import('@gradio/client')
 
             // Connect to HuggingFace Space
             const client = await Client.connect(SPACE_URL)
             setSpaceStatus('ready')
 
-            // Call the predict function
+            // Call the predict function with handle_file for audio input
             const result = await client.predict('/predict', {
-                audio: audioFile,
+                audio: handle_file(audioFile),
             })
 
             const transcriptionText = result.data[0]
