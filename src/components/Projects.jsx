@@ -12,6 +12,15 @@ function Projects() {
             image: '/images/ASR.png',
         },
         {
+            title: 'CariSEO - AI-Powered SEO Platform',
+            description: 'Corporate AI SEO platform that leverages artificial intelligence to optimize search engine rankings, automate content analysis, and provide intelligent SEO recommendations for businesses.',
+            tags: ['AI', 'SEO', 'Corporate', 'Web Platform'],
+            featured: false,
+            image: '/images/solutions.png',
+            link: 'https://www.cariseo.com/',
+            linkText: 'Visit Website',
+        },
+        {
             title: 'Brew is Life Coffee Website',
             description: 'A modern, responsive website for Brew is Life cafe featuring an elegant design, menu display, and seamless user experience built with web technologies.',
             tags: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
@@ -20,15 +29,7 @@ function Projects() {
             link: 'https://bil-coffee-website.vercel.app',
             linkText: 'View Live Demo',
         },
-        {
-            title: 'Digital Products E-Commerce',
-            description: 'Full-featured e-commerce platform for digital products with shopping cart, product catalog, and modern UI/UX design.',
-            tags: ['React', 'E-Commerce', 'Web App', 'UI/UX'],
-            featured: false,
-            image: '/images/iphone.png',
-            link: 'https://ecommerce-website-chhhh-dgcpcegdgafsf6d7.southeastasia-01.azurewebsites.net/',
-            linkText: 'View Live Demo',
-        },
+
         {
             title: 'Mobile Application Development',
             description: 'Cross-platform mobile applications built with Flutter and Dart, featuring modern UI/UX design and seamless user experience.',

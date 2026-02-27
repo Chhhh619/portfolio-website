@@ -33,6 +33,7 @@ function About() {
                                     <p>Bachelor of IT (Honours) in Software Systems Development</p>
                                     <span className="highlight-detail">TARUMT • CGPA 3.60/4.00</span>
                                     <span className="highlight-badge">President's List • Dean's List ×2</span>
+                                    <span className="highlight-badge">MUET Band 5 (CEFR C1)</span>
                                 </div>
                             </div>
 

@@ -141,8 +141,8 @@ function ASRDemo() {
             const client = await Client.connect(SPACE_URL)
             setSpaceStatus('ready')
 
-            // Call the transcribe function
-            const result = await client.predict('/transcribe', {
+            // Call the predict function
+            const result = await client.predict('/predict', {
                 audio: audioFile,
             })
 
