@@ -142,9 +142,9 @@ function ASRDemo() {
             setSpaceStatus('ready')
 
             // Call the predict function with handle_file for audio input
-            const result = await client.predict('/predict', {
-                audio: handle_file(audioFile),
-            })
+            const result = await client.predict('/predict', [
+                handle_file(audioFile),
+            ])
 
             const transcriptionText = result.data[0]
             setTranscription(transcriptionText || 'No transcription generated.')
