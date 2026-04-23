@@ -16,7 +16,7 @@ function Navbar() {
     const navLinks = [
         { label: 'Work', href: '#work' },
         { label: 'Experience', href: '#experience' },
-        { label: 'ASR Demo', href: '#asr-demo' },
+        { label: 'Finance Demo', href: '#finance-demo' },
     ]
 
     return (
