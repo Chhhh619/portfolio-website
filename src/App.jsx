@@ -3,7 +3,7 @@ import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Projects from './components/Projects'
 import Experience from './components/Experience'
-import ASRDemo from './components/ASRDemo'
+import FinanceDemo from './components/FinanceDemo'
 import Footer from './components/Footer'
 
 function App() {
@@ -20,7 +20,7 @@ function App() {
                 <Hero />
                 <Projects />
                 <Experience />
-                <ASRDemo />
+                <FinanceDemo />
             </main>
             <Footer />
         </div>

@@ -20,7 +20,7 @@ function Footer() {
                             <h4>Menu</h4>
                             <a href="#work">Work</a>
                             <a href="#experience">Experience</a>
-                            <a href="#asr-demo">ASR Demo</a>
+                            <a href="#finance-demo">Finance Demo</a>
                         </div>
 
                         <div className="footer-col">

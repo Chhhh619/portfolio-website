@@ -1,0 +1,341 @@
+/* ========================================
+   Project Modal — FLIP expand-from-card
+   Morph renders full card content for seamless open/close
+   ======================================== */
+
+.pm-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    pointer-events: auto;
+    --pm-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ----- Accent background tint ----- */
+.pm-bg {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity var(--pm-dur) var(--pm-ease), background var(--pm-dur) var(--pm-ease);
+    cursor: pointer;
+}
+
+.pm-overlay.is-open .pm-bg {
+    opacity: 1;
+}
+
+.pm-overlay.is-closing .pm-bg {
+    opacity: 0;
+}
+
+/* ----- Morphing card ----- */
+.pm-morph {
+    position: absolute;
+    border-radius: 24px;
+    transition:
+        left var(--pm-dur) var(--pm-ease),
+        top var(--pm-dur) var(--pm-ease),
+        width var(--pm-dur) var(--pm-ease),
+        height var(--pm-dur) var(--pm-ease);
+    will-change: left, top, width, height;
+}
+
+/* Inner face matches .project-card-front exactly for seamless morph */
+.pm-morph-inner {
+    position: absolute;
+    inset: 0;
+    background: #111111;
+    border-radius: 24px;
+    border: 3px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow:
+        0 40px 90px -20px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(255, 255, 255, 0.04);
+    z-index: 2;
+}
+
+.pm-morph-image {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    min-height: 0;
+}
+
+.pm-morph-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.pm-morph-info {
+    padding: 18px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: #0a0a0a;
+    border-top: 2px solid rgba(255, 255, 255, 0.08);
+    min-height: 60px;
+    flex-shrink: 0;
+}
+
+.pm-morph-info h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #ffffff;
+    white-space: nowrap;
+    letter-spacing: -0.02em;
+}
+
+.pm-morph-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.pm-morph-tag {
+    font-size: 0.72rem;
+    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+/* Stacked shadow layers behind the morphed card */
+.pm-morph-shadow {
+    position: absolute;
+    inset: 0;
+    border-radius: 24px;
+    background: #000000;
+    transition:
+        transform var(--pm-dur) var(--pm-ease),
+        opacity calc(var(--pm-dur) * 0.9) var(--pm-ease);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Collapse shadows during opening/closing so the morph looks clean */
+.pm-overlay:not(.is-open) .pm-morph-shadow,
+.pm-overlay.is-closing .pm-morph-shadow {
+    opacity: 0 !important;
+    transform: translate(0, 0) !important;
+}
+
+/* ----- Close button ----- */
+.pm-close {
+    position: fixed;
+    top: 24px;
+    right: 28px;
+    width: 44px;
+    height: 44px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 120;
+    opacity: 0;
+    transform: scale(0.8);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition:
+        opacity 0.3s ease 0.2s,
+        transform 0.3s ease 0.2s,
+        background 0.15s ease,
+        border-color 0.15s ease;
+}
+
+.pm-overlay.is-open .pm-close {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.pm-close:hover {
+    background: rgba(255, 255, 255, 0.16);
+    border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* ----- Content block below image ----- */
+.pm-content {
+    position: absolute;
+    left: 8vw;
+    right: 8vw;
+    max-width: 1120px;
+    margin: 0 auto;
+    padding: 0 8px;
+    color: #ffffff;
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+        opacity 0.45s ease 0.25s,
+        transform 0.55s var(--pm-ease) 0.25s;
+}
+
+.pm-overlay.is-open .pm-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.pm-overlay.is-closing .pm-content {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.25s ease;
+}
+
+.pm-title-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+}
+
+.pm-eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 10px;
+}
+
+.pm-title {
+    font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    color: #ffffff;
+}
+
+.pm-visit {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--accent);
+    border-bottom: 1px solid var(--accent);
+    padding-bottom: 4px;
+    transition: gap 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+}
+
+.pm-visit:hover {
+    gap: 16px;
+    color: #e6ff66;
+}
+
+.pm-visit-arrow {
+    font-family: var(--font-mono);
+    font-size: 16px;
+}
+
+.pm-grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: 64px;
+    align-items: start;
+}
+
+.pm-col {
+    min-width: 0;
+}
+
+.pm-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 14px;
+}
+
+.pm-desc {
+    font-size: 15px;
+    line-height: 1.65;
+    color: rgba(255, 255, 255, 0.82);
+    margin: 0;
+    max-width: 68ch;
+    text-wrap: pretty;
+}
+
+.pm-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.pm-pill {
+    display: inline-block;
+    padding: 6px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+/* ----- Responsive ----- */
+@media (max-width: 900px) {
+    .pm-content {
+        left: 5vw;
+        right: 5vw;
+    }
+
+    .pm-title-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+        margin-bottom: 28px;
+    }
+
+    .pm-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+
+    .pm-morph-info {
+        padding: 14px 18px;
+    }
+}
+
+@media (max-width: 520px) {
+    .pm-close {
+        top: 14px;
+        right: 14px;
+        width: 38px;
+        height: 38px;
+    }
+
+    .pm-content {
+        left: 20px;
+        right: 20px;
+    }
+
+    .pm-desc {
+        font-size: 14px;
+    }
+
+    .pm-morph-inner {
+        border-width: 2px;
+        border-radius: 18px;
+    }
+
+    .pm-morph {
+        border-radius: 18px;
+    }
+
+    .pm-morph-shadow {
+        border-radius: 18px;
+    }
+}
