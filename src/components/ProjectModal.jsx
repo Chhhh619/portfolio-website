@@ -84,16 +84,19 @@ function ProjectModal({ project, origin, onClose }) {
 
     // Centered morphing image target — preserves card aspect ratio
     const cardAspect = origin.width / origin.height || 1.5
+    const isMobile = viewport.w <= 760
     const imgMaxW = Math.min(targetW * 0.68, 760)
     const imgMaxH = Math.min(targetH * 0.5, 520)
-    let imgW = imgMaxW
-    let imgH = imgW / cardAspect
-    if (imgH > imgMaxH) {
+    let imgW = isMobile ? origin.width : imgMaxW
+    let imgH = isMobile ? origin.height : imgW / cardAspect
+    if (!isMobile && imgH > imgMaxH) {
         imgH = imgMaxH
         imgW = imgH * cardAspect
     }
     const imgX = (viewport.w - imgW) / 2
-    const imgY = Math.max(targetY + targetH * 0.08, viewport.h * 0.05 + 40)
+    const imgY = isMobile
+        ? Math.max(40, viewport.h * 0.12)
+        : Math.max(targetY + targetH * 0.08, viewport.h * 0.05 + 40)
 
     const isOpen = state === 'open'
     const isClosing = state === 'closing'
@@ -105,7 +108,7 @@ function ProjectModal({ project, origin, onClose }) {
             : { left: origin.left, top: origin.top, width: origin.width, height: origin.height }
 
     const shadowLayers = 3
-    const contentTop = imgY + imgH + 40
+    const contentTop = imgY + imgH + (isMobile ? 44 : 40)
 
     const bgStyle = {
         background: overlayColor || project.accent || '#0a0a0a',
