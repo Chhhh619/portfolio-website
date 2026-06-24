@@ -1,41 +1,6 @@
 import { useRef, useState } from 'react'
 import './FinanceDemo.css'
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY
-const GEMINI_MODEL = 'gemini-2.5-flash'
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
-
-const DEFAULT_CATEGORIES = [
-    'Food', 'Drinks', 'Groceries', 'Transport', 'Shopping',
-    'Bills', 'Entertainment', 'Health', 'Income', 'Others',
-]
-
-const SYSTEM_PROMPT = [
-    'You are a financial transaction extractor for a Malaysian budgeting app.',
-    'Extract financial transactions from the input image (receipts, bank notifications, e-wallet notifications, or any spending screenshot).',
-    '',
-    'IMPORTANT RULES:',
-    '- For receipts: extract ONE transaction using the FINAL TOTAL amount (after tax/service charge). Do NOT extract subtotals, individual items, or tax lines as separate transactions.',
-    '- For bank/e-wallet notifications: extract each distinct transaction.',
-    '- The merchant should be the store or business name, NOT individual item names.',
-    '- If the input has multiple unrelated transactions, extract each one.',
-    '',
-    `Assign ONE category from this list: ${DEFAULT_CATEGORIES.join(', ')}.`,
-    "If none fit well, use 'Others' and set confidence lower.",
-    '',
-    'For each transaction return a JSON object with:',
-    '- amount: number (positive, final amount paid in MYR)',
-    "- merchant: string (business/store name, e.g. 'McDonald\\'s', 'Grab', 'Touch n Go')",
-    '- direction: "expense" or "income"',
-    '- category: string (from the list above)',
-    '- source: "receipt"',
-    '- confidence: number 0-1',
-    '- transaction_at: ISO datetime string if visible, otherwise omit.',
-    '',
-    'Return a JSON array only. No markdown, no explanation.',
-    'If no financial transaction is found, return: []',
-].join('\n')
-
 function fileToBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader()
@@ -54,50 +19,18 @@ function fileToBase64(file) {
 }
 
 async function callGemini({ mimeType, data }) {
-    if (!GEMINI_API_KEY) {
-        throw new Error(
-            'Gemini API key not configured. Set VITE_GEMINI_API_KEY in your .env file and restart the dev server.'
-        )
-    }
-
-    const body = {
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [
-            {
-                parts: [
-                    { inlineData: { mimeType, data } },
-                ],
-            },
-        ],
-        generationConfig: {
-            temperature: 0.1,
-            responseMimeType: 'application/json',
-        },
-    }
-
-    const res = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
+    const res = await fetch('/api/gemini', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
+        body: JSON.stringify({ mimeType, data }),
     })
 
+    const json = await res.json()
     if (!res.ok) {
-        const errText = await res.text()
-        throw new Error(`Gemini ${res.status}: ${errText.slice(0, 300)}`)
+        throw new Error(json.error || `Server error ${res.status}`)
     }
 
-    const payload = await res.json()
-    const content = payload.candidates?.[0]?.content?.parts?.[0]?.text
-    if (!content) throw new Error('No content returned from Gemini.')
-
-    let parsed
-    try {
-        parsed = JSON.parse(content)
-    } catch (e) {
-        throw new Error(`Could not parse JSON: ${content.slice(0, 200)}`)
-    }
-    if (!Array.isArray(parsed)) throw new Error('Gemini did not return a JSON array.')
-    return parsed
+    return json.transactions
 }
 
 function FinanceDemo() {
