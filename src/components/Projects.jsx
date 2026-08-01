@@ -25,6 +25,21 @@ function Projects() {
             accentEdge: '#3a7a5c',
         },
         {
+            id: '5m-signcom',
+            title: '5M Signcom',
+            subtitle: 'Signage Manufacturer / Website',
+            description: 'Corporate signage website for a Malaysian fabrication and installation company.',
+            fullDescription:
+                'A polished marketing website for 5M Signcom, a Shah Alam-based signage manufacturer that designs, fabricates, and installs commercial signs across Malaysia. The site presents services, project galleries, and company credentials with a clean, responsive experience that works well on mobile and desktop.',
+            tags: ['Web Design', 'Corporate', 'Responsive'],
+            techStack: ['HTML', 'CSS', 'JavaScript', 'Responsive Design'],
+            image: '/images/5m.png',
+            link: 'https://5-m-signcom.vercel.app/index.html',
+            bgText: '5M SIGNCOM',
+            accent: '#121212',
+            accentEdge: '#5d5d5d',
+        },
+        {
             id: 'sapot',
             title: 'SAPOT.AI',
             subtitle: 'Sales Assistant Performance Optimization Tool',
