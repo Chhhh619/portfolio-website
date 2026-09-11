@@ -18,44 +18,12 @@
     max-width: 820px;
 }
 
-.hero-availability {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 16px;
-    border: 1px solid var(--border);
-    border-radius: 50px;
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    margin-bottom: 40px;
-    font-weight: 400;
-}
-
-.availability-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.3;
-    }
-}
-
 .hero-name {
     font-size: clamp(3rem, 8vw, 6rem);
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 1.05;
+    margin-top: 8px;
     margin-bottom: 32px;
     color: #ffffff;
 }
@@ -69,6 +37,44 @@
     line-height: 1.7;
     color: var(--text-secondary);
     max-width: 560px;
+}
+
+/* Primary CTA — solid so it outranks the ghost pill in the navbar */
+.hero-contact {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 36px;
+    padding: 14px 28px;
+    border: 1px solid var(--text);
+    border-radius: 50px;
+    background: var(--text);
+    color: var(--text-dark);
+    font-family: var(--font);
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition-fast), color var(--transition-fast);
+}
+
+.hero-contact:hover {
+    background: transparent;
+    color: var(--text);
+}
+
+.hero-contact:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+}
+
+.hero-contact-arrow {
+    font-family: var(--font-mono);
+    font-size: 1rem;
+    transition: transform var(--transition-fast);
+}
+
+.hero-contact:hover .hero-contact-arrow {
+    transform: translateX(4px);
 }
 
 .hero-scroll-indicator {
@@ -98,5 +104,22 @@
 
     .hero-name {
         margin-bottom: 24px;
+    }
+
+    .hero-contact {
+        margin-top: 28px;
+        padding: 12px 24px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .hero-scroll-indicator {
+        animation: none;
+    }
+
+    .hero-contact-arrow {
+        transition: none;
     }
 }
