@@ -1,14 +1,10 @@
 import './Hero.css'
 
-function Hero() {
+function Hero({ onContactClick }) {
     return (
         <section className="hero" id="hero">
             <div className="container hero-content">
                 <div className="hero-text">
-                    <div className="hero-availability">
-                        <span className="availability-dot"></span>
-                        Available May 2026
-                    </div>
                     <h1 className="hero-name">
                         <span className="hero-greeting">Hi, I'm</span><br />
                         Tan Cheng Hong.
@@ -17,6 +13,11 @@ function Hero() {
                         A software engineer passionately building innovative digital
                         experiences — from AI-powered speech recognition to modern web platforms.
                     </p>
+
+                    <button type="button" className="hero-contact" onClick={onContactClick}>
+                        Contact me
+                        <span className="hero-contact-arrow" aria-hidden="true">→</span>
+                    </button>
                 </div>
             </div>
 

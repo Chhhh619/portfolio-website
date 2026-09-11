@@ -1,3 +1,4 @@
+import { contacts } from '../lib/contacts'
 import './Footer.css'
 
 function Footer() {
@@ -25,10 +26,16 @@ function Footer() {
 
                         <div className="footer-col">
                             <h4>Contact</h4>
-                            <a href="mailto:tanchenghong619@gmail.com" target="_blank" rel="noopener noreferrer">Email</a>
-                            <a href="https://api.whatsapp.com/send?phone=60127857687&text=Hi%2C%20are%20you%20interested%20in%20a%20job%3F" target="_blank" rel="noopener noreferrer">WhatsApp</a>
-                            <a href="https://www.linkedin.com/in/cheng-hong-tan-a68a76388/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                            <a href="https://github.com/Chhhh619" target="_blank" rel="noopener noreferrer">GitHub</a>
+                            {contacts.map((channel) => (
+                                <a
+                                    key={channel.id}
+                                    href={channel.href}
+                                    target={channel.external ? '_blank' : undefined}
+                                    rel={channel.external ? 'noopener noreferrer' : undefined}
+                                >
+                                    {channel.label}
+                                </a>
+                            ))}
                         </div>
 
                         <div className="footer-col">

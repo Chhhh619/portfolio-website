@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import './Navbar.css'
 
-function Navbar() {
+function Navbar({ onContactClick }) {
     const [scrolled, setScrolled] = useState(false)
     const [menuOpen, setMenuOpen] = useState(false)
 
@@ -36,6 +36,17 @@ function Navbar() {
                             {link.label}
                         </a>
                     ))}
+
+                    <button
+                        type="button"
+                        className="navbar-contact"
+                        onClick={() => {
+                            setMenuOpen(false)
+                            onContactClick()
+                        }}
+                    >
+                        Contact me
+                    </button>
                 </div>
 
                 <button
