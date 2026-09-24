@@ -21,6 +21,11 @@
     line-height: 1.6;
 }
 
+.fd-subtitle-name {
+    color: var(--accent);
+    font-weight: 500;
+}
+
 .fd-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -39,7 +44,7 @@
     position: relative;
     aspect-ratio: 4 / 5;
     background: var(--bg-card);
-    border: 1.5px dashed rgba(255, 255, 255, 0.18);
+    border: 1.5px dashed rgba(200, 255, 0, 0.6);
     border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
@@ -49,12 +54,12 @@
 }
 
 .fd-dropzone:hover {
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: var(--accent);
 }
 
 .fd-dropzone.has-image {
     border-style: solid;
-    border-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(200, 255, 0, 0.55);
     background: #000;
 }
 
@@ -170,7 +175,7 @@
 /* ----- Output panel ----- */
 .fd-output-panel {
     background: var(--bg-card);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(200, 255, 0, 0.55);
     border-radius: var(--radius-lg);
     padding: 28px;
     min-height: 420px;

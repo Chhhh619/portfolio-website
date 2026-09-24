@@ -1,103 +1,64 @@
 import { useRef, useState } from 'react'
 import './FinanceDemo.css'
 
-const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY
-const GEMINI_MODEL = 'gemini-2.5-flash'
-const GEMINI_URL = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`
+// Receipts stay legible at this size, and it keeps uploads far below the
+// 4.5 MB request cap on the server function.
+const MAX_DIMENSION = 1600
+const JPEG_QUALITY = 0.85
+const MAX_FILE_BYTES = 8 * 1024 * 1024
 
-const DEFAULT_CATEGORIES = [
-    'Food', 'Drinks', 'Groceries', 'Transport', 'Shopping',
-    'Bills', 'Entertainment', 'Health', 'Income', 'Others',
-]
-
-const SYSTEM_PROMPT = [
-    'You are a financial transaction extractor for a Malaysian budgeting app.',
-    'Extract financial transactions from the input image (receipts, bank notifications, e-wallet notifications, or any spending screenshot).',
-    '',
-    'IMPORTANT RULES:',
-    '- For receipts: extract ONE transaction using the FINAL TOTAL amount (after tax/service charge). Do NOT extract subtotals, individual items, or tax lines as separate transactions.',
-    '- For bank/e-wallet notifications: extract each distinct transaction.',
-    '- The merchant should be the store or business name, NOT individual item names.',
-    '- If the input has multiple unrelated transactions, extract each one.',
-    '',
-    `Assign ONE category from this list: ${DEFAULT_CATEGORIES.join(', ')}.`,
-    "If none fit well, use 'Others' and set confidence lower.",
-    '',
-    'For each transaction return a JSON object with:',
-    '- amount: number (positive, final amount paid in MYR)',
-    "- merchant: string (business/store name, e.g. 'McDonald\\'s', 'Grab', 'Touch n Go')",
-    '- direction: "expense" or "income"',
-    '- category: string (from the list above)',
-    '- source: "receipt"',
-    '- confidence: number 0-1',
-    '- transaction_at: ISO datetime string if visible, otherwise omit.',
-    '',
-    'Return a JSON array only. No markdown, no explanation.',
-    'If no financial transaction is found, return: []',
-].join('\n')
-
-function fileToBase64(file) {
+function loadImage(file) {
     return new Promise((resolve, reject) => {
-        const reader = new FileReader()
-        reader.onload = () => {
-            const result = reader.result
-            const comma = result.indexOf(',')
-            resolve({
-                mimeType: file.type || 'image/jpeg',
-                data: comma >= 0 ? result.slice(comma + 1) : result,
-                dataUrl: result,
-            })
+        const url = URL.createObjectURL(file)
+        const img = new Image()
+        img.onload = () => {
+            URL.revokeObjectURL(url)
+            resolve(img)
         }
-        reader.onerror = reject
-        reader.readAsDataURL(file)
+        img.onerror = () => {
+            URL.revokeObjectURL(url)
+            reject(new Error('decode failed'))
+        }
+        img.src = url
     })
 }
 
-async function callGemini({ mimeType, data }) {
-    if (!GEMINI_API_KEY) {
-        throw new Error(
-            'Gemini API key not configured. Set VITE_GEMINI_API_KEY in your .env file and restart the dev server.'
-        )
+// Re-encodes as a downscaled JPEG, which also strips EXIF metadata such as GPS location.
+async function prepareImage(file) {
+    const img = await loadImage(file)
+    const scale = Math.min(1, MAX_DIMENSION / Math.max(img.naturalWidth, img.naturalHeight))
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(img.naturalWidth * scale)
+    canvas.height = Math.round(img.naturalHeight * scale)
+    const ctx = canvas.getContext('2d')
+    ctx.fillStyle = '#ffffff'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+    const dataUrl = canvas.toDataURL('image/jpeg', JPEG_QUALITY)
+    return {
+        mimeType: 'image/jpeg',
+        data: dataUrl.slice(dataUrl.indexOf(',') + 1),
+        dataUrl,
     }
+}
 
-    const body = {
-        system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-        contents: [
-            {
-                parts: [
-                    { inlineData: { mimeType, data } },
-                ],
-            },
-        ],
-        generationConfig: {
-            temperature: 0.1,
-            responseMimeType: 'application/json',
-        },
-    }
-
-    const res = await fetch(`${GEMINI_URL}?key=${GEMINI_API_KEY}`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-    })
-
-    if (!res.ok) {
-        const errText = await res.text()
-        throw new Error(`Gemini ${res.status}: ${errText.slice(0, 300)}`)
-    }
-
-    const payload = await res.json()
-    const content = payload.candidates?.[0]?.content?.parts?.[0]?.text
-    if (!content) throw new Error('No content returned from Gemini.')
-
-    let parsed
+async function extractTransactions({ mimeType, data }) {
+    let res
     try {
-        parsed = JSON.parse(content)
-    } catch (e) {
-        throw new Error(`Could not parse JSON: ${content.slice(0, 200)}`)
+        res = await fetch('/api/extract', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ mimeType, data }),
+        })
+    } catch {
+        throw new Error('Could not reach the demo server. Check your connection and try again.')
     }
-    if (!Array.isArray(parsed)) throw new Error('Gemini did not return a JSON array.')
-    return parsed
+
+    const payload = await res.json().catch(() => null)
+    if (!res.ok || payload?.status !== 'ok' || !Array.isArray(payload.transactions)) {
+        throw new Error(payload?.message || 'The demo is unavailable right now. Try again in a minute.')
+    }
+    return payload.transactions
 }
 
 function FinanceDemo() {
@@ -119,12 +80,16 @@ function FinanceDemo() {
             setError('Please select an image file.')
             return
         }
+        if (file.size > MAX_FILE_BYTES) {
+            setError('That image is over 8 MB. Try a smaller screenshot or photo.')
+            return
+        }
         try {
-            const { mimeType, data, dataUrl } = await fileToBase64(file)
+            const { mimeType, data, dataUrl } = await prepareImage(file)
             setPreview(dataUrl)
             setFileMeta({ mimeType, data })
         } catch (e) {
-            setError('Could not read the selected file.')
+            setError('Could not read this image. Try a JPG or PNG.')
         }
     }
 
@@ -145,7 +110,7 @@ function FinanceDemo() {
         setResults(null)
         setRawJson(null)
         try {
-            const transactions = await callGemini(fileMeta)
+            const transactions = await extractTransactions(fileMeta)
             setResults(transactions)
             setRawJson(JSON.stringify(transactions, null, 2))
         } catch (e) {
@@ -173,7 +138,7 @@ function FinanceDemo() {
                 </div>
 
                 <p className="fd-subtitle">
-                    Upload or snap a receipt / payment notification. The image goes straight to Gemini 2.5 Flash and comes back as structured transactions. No account, no storage — purely a demo of the PocketRinggit extraction pipeline.
+                    This is a hands-on demo of <span className="fd-subtitle-name">PocketRinggit</span>, the finance tracker PWA showcased above. It's a simple way to try its core feature yourself: upload or snap a receipt or payment notification, and Gemini 2.5 Flash turns it into structured transactions, just like it does in the app. You don't need an account, and nothing you upload is stored.
                 </p>
 
                 <div className="fd-grid">
@@ -299,8 +264,8 @@ function FinanceDemo() {
                             <>
                                 <div className="fd-banner">
                                     {results.length === 1
-                                        ? 'Saved 1 transaction'
-                                        : `Saved ${results.length} transactions`}
+                                        ? 'Found 1 transaction'
+                                        : `Found ${results.length} transactions`}
                                 </div>
                                 <ul className="fd-tx-list">
                                     {results.map((tx, i) => (
