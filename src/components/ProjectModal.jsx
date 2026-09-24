@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { extractOverlayColor } from '../lib/extractColor'
 import './ProjectModal.css'
 
 const DURATION = 550
@@ -7,7 +6,6 @@ const CLOSE_BUFFER = 60 // extra ms after morph transition to keep overlay mount
 
 function ProjectModal({ project, origin, onClose }) {
     const [state, setState] = useState('idle') // idle | opening | open | closing
-    const [overlayColor, setOverlayColor] = useState(null)
     const [viewport, setViewport] = useState(() => ({
         w: typeof window !== 'undefined' ? window.innerWidth : 0,
         h: typeof window !== 'undefined' ? window.innerHeight : 0,
@@ -23,22 +21,6 @@ function ProjectModal({ project, origin, onClose }) {
             }
         }
     }, [project, origin])
-
-    // Extract dominant color from thumbnail
-    useEffect(() => {
-        if (!project) {
-            setOverlayColor(null)
-            return
-        }
-        let cancelled = false
-        extractOverlayColor(project.image).then((color) => {
-            if (cancelled) return
-            setOverlayColor(color)
-        })
-        return () => {
-            cancelled = true
-        }
-    }, [project])
 
     // Promote opening → open after first paint (setTimeout avoids React 18 batching)
     useEffect(() => {
@@ -111,7 +93,7 @@ function ProjectModal({ project, origin, onClose }) {
     const contentTop = imgY + imgH + (isMobile ? 44 : 40)
 
     const bgStyle = {
-        background: overlayColor || project.accent || '#0a0a0a',
+        background: project.accent || '#0a0a0a',
     }
 
     return (

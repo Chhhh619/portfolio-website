@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Analytics } from '@vercel/analytics/react'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Projects from './components/Projects'
@@ -29,6 +30,7 @@ function App() {
             </main>
             <Footer />
             <ContactModal open={contactOpen} onClose={closeContact} />
+            <Analytics />
         </div>
     )
 }

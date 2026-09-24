@@ -11,7 +11,7 @@ function Hero({ onContactClick }) {
                     </h1>
                     <p className="hero-tagline">
                         A software engineer passionately building innovative digital
-                        experiences — from AI-powered speech recognition to modern web platforms.
+                        experiences, from AI-powered speech recognition to modern web platforms.
                     </p>
 
                     <button type="button" className="hero-contact" onClick={onContactClick}>
