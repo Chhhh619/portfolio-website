@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import './ProjectModal.css'
 
 const DURATION = 550
@@ -6,13 +6,15 @@ const CLOSE_BUFFER = 60 // extra ms after morph transition to keep overlay mount
 
 function ProjectModal({ project, origin, onClose }) {
     const [state, setState] = useState('idle') // idle | opening | open | closing
+    const overlayRef = useRef(null)
     const [viewport, setViewport] = useState(() => ({
         w: typeof window !== 'undefined' ? window.innerWidth : 0,
         h: typeof window !== 'undefined' ? window.innerHeight : 0,
     }))
 
-    // Mount / unmount lifecycle
-    useEffect(() => {
+    // Mount / unmount lifecycle. Layout effect so the page scrollbar is gone
+    // before the overlay is measured below.
+    useLayoutEffect(() => {
         if (project && origin) {
             document.body.style.overflow = 'hidden'
             setState('opening')
@@ -40,12 +42,17 @@ function ProjectModal({ project, origin, onClose }) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [project, state])
 
-    // Track viewport for responsive morph targets
-    useEffect(() => {
-        const onResize = () => setViewport({ w: window.innerWidth, h: window.innerHeight })
-        window.addEventListener('resize', onResize)
-        return () => window.removeEventListener('resize', onResize)
-    }, [])
+    // Track viewport for responsive morph targets. Width comes from the overlay's
+    // client box so its reserved scrollbar gutter doesn't skew horizontal centering.
+    useLayoutEffect(() => {
+        const measure = () => setViewport({
+            w: overlayRef.current?.clientWidth ?? window.innerWidth,
+            h: window.innerHeight,
+        })
+        measure()
+        window.addEventListener('resize', measure)
+        return () => window.removeEventListener('resize', measure)
+    }, [project, origin])
 
     const handleClose = () => {
         if (state === 'closing' || state === 'idle') return
@@ -64,18 +71,26 @@ function ProjectModal({ project, origin, onClose }) {
     const targetH = viewport.h * sizePct
     const targetY = (viewport.h - targetW) / 2
 
+    // Stacked shadow layers step down-right; smaller steps on phones so the stack fits
+    const shadowLayers = 3
+    const isMobile = viewport.w <= 760
+    const shadowStepX = isMobile ? 6 : 14
+    const shadowStepY = isMobile ? 8 : 16
+    const shadowOffsetX = shadowLayers * shadowStepX
+    const shadowOffsetY = shadowLayers * shadowStepY
+
     // Centered morphing image target — preserves card aspect ratio
     const cardAspect = origin.width / origin.height || 1.5
-    const isMobile = viewport.w <= 760
     const imgMaxW = Math.min(targetW * 0.68, 760)
     const imgMaxH = Math.min(targetH * 0.5, 520)
-    let imgW = isMobile ? origin.width : imgMaxW
-    let imgH = isMobile ? origin.height : imgW / cardAspect
+    let imgW = isMobile ? Math.min(origin.width, viewport.w - 32 - shadowOffsetX) : imgMaxW
+    let imgH = imgW / cardAspect
     if (!isMobile && imgH > imgMaxH) {
         imgH = imgMaxH
         imgW = imgH * cardAspect
     }
-    const imgX = (viewport.w - imgW) / 2
+    // Center the card together with its shadow stack, not the card alone
+    const imgX = (viewport.w - imgW - shadowOffsetX) / 2
     const imgY = isMobile
         ? Math.max(40, viewport.h * 0.12)
         : Math.max(targetY + targetH * 0.08, viewport.h * 0.05 + 40)
@@ -89,8 +104,7 @@ function ProjectModal({ project, origin, onClose }) {
             ? { left: imgX, top: imgY, width: imgW, height: imgH }
             : { left: origin.left, top: origin.top, width: origin.width, height: origin.height }
 
-    const shadowLayers = 3
-    const contentTop = imgY + imgH + (isMobile ? 44 : 40)
+    const contentTop = imgY + imgH + shadowOffsetY + (isMobile ? 32 : 40)
 
     const bgStyle = {
         background: project.accent || '#0a0a0a',
@@ -98,6 +112,7 @@ function ProjectModal({ project, origin, onClose }) {
 
     return (
         <div
+            ref={overlayRef}
             className={`pm-overlay ${isOpen ? 'is-open' : ''} ${isClosing ? 'is-closing' : ''} ${isOpening ? 'is-opening' : ''}`}
             style={{ '--pm-dur': `${DURATION}ms` }}
             role="dialog"
@@ -116,7 +131,7 @@ function ProjectModal({ project, origin, onClose }) {
                             key={i}
                             className="pm-morph-shadow"
                             style={{
-                                transform: `translate(${n * 14}px, ${n * 16}px)`,
+                                transform: `translate(${n * shadowStepX}px, ${n * shadowStepY}px)`,
                                 opacity: 0.22 + (shadowLayers - n) * 0.08,
                             }}
                         />
